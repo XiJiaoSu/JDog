@@ -6,12 +6,21 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Map.Entry;
+
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
 import cn.wocding.jdog.http.HttpRequestDecoder;
 import cn.wocding.jdog.http.Request;
+import cn.wocding.jdog.http.Response;
 import cn.wocding.jdog.io.bio.SocketEndPoint;
+import cn.wocding.jdog.server.handler.ResourceHandler;
+import cn.wocding.jdog.servlet.DefaultServlet;
+import cn.wocding.jdog.utils.StringUtils;
 
 /**
  * 用于socket server启动，监听
@@ -29,6 +38,9 @@ public class SocketConnector {
 	private int acceptQueueSize = 50;
 	
 	private volatile boolean start=true;
+	
+	//test defaultServlet : to be done
+	private HttpServlet defaultServerlet=new DefaultServlet();
 	
 	public SocketConnector() {
 	
@@ -80,17 +92,22 @@ public class SocketConnector {
 		
 		public void run() {
 			try {
-				System.out.println("---------------------");
 				Request request = HttpRequestDecoder.decoder(socket);
-				//to be done
-			    OutputStream outputStream = socket.getOutputStream();
+				
+				Response response=ResourceHandler.Handler(request);
+				
+			    OutputStream out = socket.getOutputStream();
 			    StringBuilder headers = new StringBuilder();
-			    headers.append("http/1.1 200 OK \r\n");
-			    headers.append("Content-Type: text/html;charset=utf-8\r\n");
-			    headers.append("\r\n");
-			    outputStream.write(headers.toString().getBytes());
-			    outputStream.write("<h1>hello jdog</h1>".getBytes());
-				outputStream.close();
+			    headers.append(response.getHttpVersion()+" "+response.getStatus()+" OK"+StringUtils.CRLF);
+			    for (Entry<String, String> header:response.getHeaders().entrySet()) {
+					headers.append(header.getKey() + ": " + header.getValue() + StringUtils.CRLF);
+				}
+			    //添加返回内容， 空格
+			    headers.append(StringUtils.CRLF);
+			    out.write(headers.toString().getBytes());
+			    if (response.getBody()!=null) {
+			    	out.write(response.getBody());
+				}
 				socket.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

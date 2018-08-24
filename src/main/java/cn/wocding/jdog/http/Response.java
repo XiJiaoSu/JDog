@@ -1,7 +1,9 @@
 package cn.wocding.jdog.http;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
@@ -11,6 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.wocding.jdog.io.HttpOutputStream;
+import cn.wocding.jdog.utils.StringUtils;
 /**
  * 
  * @author wills
@@ -20,7 +23,7 @@ public class Response implements HttpServletResponse{
 	
 	
 	private String httpVersion = HttpVersion.HTTP_1_1;
-	
+
 	private int status;
 	private String characterEncoding;
 	private String contentType;
@@ -31,46 +34,39 @@ public class Response implements HttpServletResponse{
 	private byte[] body;
 	
 	private HttpOutputStream outputStream = new HttpOutputStream();
-	
 	private PrintWriter writer;
 	
-
-	public String getCharacterEncoding() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	//setter and getter
+	public String getHttpVersion() {
+		return httpVersion;
 	}
 
-	public String getContentType() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setHttpVersion(String httpVersion) {
+		this.httpVersion = httpVersion;
 	}
 
-	public ServletOutputStream getOutputStream() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public int getStatus() {
+		return status;
 	}
 
-	public PrintWriter getWriter() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
-	public void setCharacterEncoding(String charset) {
-		// TODO Auto-generated method stub
-		
+	public HashMap<String, String> getHeaders() {
+		return headers;
 	}
 
-	public void setContentLength(int len) {
-		// TODO Auto-generated method stub
-		
+	public byte[] getBody() {
+		return body;
 	}
 
-	public void setContentType(String type) {
-		// TODO Auto-generated method stub
-		
+	public void setBody(byte[] body) {
+		this.body = body;
 	}
 
-	public void setBufferSize(int size) {
+	public void flushBuffer() throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
@@ -80,14 +76,33 @@ public class Response implements HttpServletResponse{
 		return 0;
 	}
 
-	public void flushBuffer() throws IOException {
-		// TODO Auto-generated method stub
-		
+	public String getCharacterEncoding() {
+		return characterEncoding;
 	}
 
-	public void resetBuffer() {
-		// TODO Auto-generated method stub
-		
+	public String getContentType() {
+		return contentType;
+	}
+
+	public Locale getLocale() {
+		return Locale.getDefault();
+	}
+
+	public ServletOutputStream getOutputStream() throws IOException {
+		return outputStream;
+	}
+
+	public PrintWriter getWriter() throws IOException {
+		if (writer == null) {
+            String encoding = characterEncoding;
+
+            if (encoding == null){
+                encoding = StringUtils.__ISO_8859_1;
+                setCharacterEncoding(encoding);
+            }
+           writer = new PrintWriter(new OutputStreamWriter(outputStream, Charset.forName(characterEncoding)));
+		}
+		return writer;
 	}
 
 	public boolean isCommitted() {
@@ -100,104 +115,113 @@ public class Response implements HttpServletResponse{
 		
 	}
 
-	public void setLocale(Locale loc) {
+	public void resetBuffer() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public Locale getLocale() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void addCookie(Cookie cookie) {
+	public void setBufferSize(int arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public boolean containsHeader(String name) {
+	public void setCharacterEncoding(String encode) {
+		this.characterEncoding = encode;
+	}
+
+	public void setContentLength(int length) {
+		this.contentLength = length;
+	}
+
+	public void setContentType(String type) {
+		this.contentType = type;
+	}
+
+	public void setLocale(Locale locale) {
+		// TODO Auto-generated method stub
+	}
+
+	public void addCookie(Cookie arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addDateHeader(String arg0, long arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addHeader(String arg0, String arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addIntHeader(String arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean containsHeader(String arg0) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public String encodeURL(String url) {
+	public String encodeRedirectURL(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public String encodeRedirectURL(String url) {
+	public String encodeRedirectUrl(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public String encodeUrl(String url) {
+	public String encodeURL(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public String encodeRedirectUrl(String url) {
+	public String encodeUrl(String arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public void sendError(int sc, String msg) throws IOException {
+	public void sendError(int arg0) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void sendError(int sc) throws IOException {
+	public void sendError(int arg0, String arg1) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void sendRedirect(String location) throws IOException {
+	public void sendRedirect(String arg0) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void setDateHeader(String name, long date) {
+	public void setDateHeader(String arg0, long arg1) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void addDateHeader(String name, long date) {
+	public void setHeader(String arg0, String arg1) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void setHeader(String name, String value) {
+	public void setIntHeader(String arg0, int arg1) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void addHeader(String name, String value) {
+	public void setStatus(int arg0, String arg1) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	public void setIntHeader(String name, int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void addIntHeader(String name, int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setStatus(int sc) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setStatus(int sc, String sm) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public int getStatus() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getContentLength() {
+		return contentLength;
 	}
 
 	public String getHeader(String name) {

@@ -40,7 +40,6 @@ public class HttpRequestDecoder {
 				System.out.println(line.substring(index+2).trim());
 			}
 		}
-		
 		socket.shutdownInput();
 		return request;
 	}

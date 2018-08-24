@@ -14,7 +14,6 @@ public class SocketEndPoint implements EndPoint{
 		this.socket = socket;
 	}
 	
-	
-	
+
 	
 }

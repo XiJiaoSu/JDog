@@ -308,7 +308,7 @@ public class Request implements HttpServletRequest{
 
 	public String getMethod() {
 		// TODO Auto-generated method stub
-		return null;
+		return method;
 	}
 
 	public Part getPart(String arg0) throws IOException, ServletException {
@@ -343,7 +343,7 @@ public class Request implements HttpServletRequest{
 
 	public String getRequestURI() {
 		// TODO Auto-generated method stub
-		return null;
+		return requestURI;
 	}
 
 	public StringBuffer getRequestURL() {
